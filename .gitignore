@@ -1,0 +1,247 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv (NOTE: .python-version is committed to fix Python version)
+# .python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# IDEs
+.vscode/
+.idea/
+.claude/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+.Trashes
+.Spotlight-V100
+.fseventsd
+
+# Project specific - Data files
+*.pkl
+*.pickle
+*.csv
+*.parquet
+*.feather
+*.h5
+*.hdf5
+*.db
+*.sqlite
+*.sqlite3
+
+# Project specific - Generated files
+*.json
+!.claude/**/*.json
+!package.json
+!tsconfig.json
+!pyproject.toml
+
+# Project specific - Runtime directories
+logs/
+cache/
+temp/
+tmp/
+
+# API keys and secrets (CRITICAL - NEVER COMMIT)
+# NOTE: Only ignore root-level config.py, not module config files
+/config.py
+secrets.py
+*.key
+*.pem
+*.cert
+
+# Configuration (per CLAUDE.md rules)
+# CRITICAL: secrets.env contains API keys and credentials
+config/secrets.env
+config/config.local.yaml
+config/*.local.yaml
+config/*.secret.*
+
+# Session logs (may contain sensitive debugging info)
+# NOTE: Session logs are kept in git by default for team collaboration
+# If a session log contains sensitive data, review before commit or add to gitignore
+# docs/sessions/*.md
+
+# Replay data (may contain sensitive market data or positions)
+# NOTE: journal/ is a source code module, not runtime data
+# Runtime journal storage is in artifacts/ (see ROADMAP.md Phase 1.2)
+artifacts/
+replay/
+snapshots/
+backups/
+
+# Trading system runtime data (may contain sensitive position/order data)
+positions/
+orders/
+fills/
+reports/
+exports/
+
+# Workspace files (outside project directory, listed for documentation)
+# These are already outside the git repo, but listed here for clarity
+# ../References-DoNotLinkToAnyProjectsHere/
+# ../DesignOutline.md
+
+# Python cache and compiled files (additional)
+*.so
+*.dylib
+.Python
+
+# Ruff cache
+.ruff_cache/
+
+# Coverage reports
+.coverage.*
+htmlcov/
+.pytest_cache/
+
+# Profiling data
+*.prof
+*.lprof
+*.pstat
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Temporary files from editors
+.*.swp
+.*.swo
+*~
+\#*\#
+.\#*
+
+# Runtime journal outputs (timestamp-based directories)
+# NOTE: journal/ module itself is source code, but journal/YYYYMMDD-* are runtime outputs
+journal/20*/
+
+# Calendar data cache (runtime market calendar data)
+calendar_data/
+
+# Backtest execution logs
+backtest*.log
+
+# Backtest results (runtime outputs)
+backtest_results/

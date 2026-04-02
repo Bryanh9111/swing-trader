@@ -1,0 +1,47 @@
+regime_name: "bear_market"
+description: "Bear market - very conservative, may disable trading"
+inherits: "base"
+
+enabled: false  # Disable bear market trading to reduce losses
+
+market_regime:
+  vix_enabled: true
+  vix_extreme_threshold: 35.0
+  vix_elevated_threshold: 25.0
+  vix_spike_threshold: 0.20
+
+scanner:
+  box_threshold: 0.03
+  volume_increase_ratio: 2.5
+  min_box_quality: 0.85
+  min_dollar_volume: 5000000
+  use_pullback_confirmation_filter: true
+  pullback_confirmation:
+    enabled: true
+    lookback_days: 7
+    pullback_tolerance_pct: 0.015
+    require_volume_increase: true
+    volume_increase_ratio: 1.5
+    score_threshold_for_skip: null
+  reversal:
+    enabled: true
+    rsi_period: 14
+    rsi_oversold: 30.0
+    volume_lookback: 20
+    volume_ratio_threshold: 2.0
+    require_price_stabilization: true
+    stabilization_days: 2
+
+strategy:
+  min_score_threshold: 0.90       # Lowered threshold (0.95 -> 0.90)
+  max_new_positions_per_day: 1    # Ultra-conservative in bear market
+  max_positions_to_rotate: 1      # Ultra-conservative in bear market
+  base_position_pct: 0.02
+  take_profit_pct: 0.04           # Fixed 4% take-profit (dynamic takes priority)
+  stop_loss_pct: 0.04
+
+breakthrough:
+  require_confirmation_days: 3
+
+risk_gate:
+  max_total_exposure: 0.60  # 60% max exposure in bear market

@@ -1,0 +1,45 @@
+# Market Regime Configuration - Base
+# All regime-specific configs inherit from this base
+regime_name: "base"
+description: "Base configuration inherited by all regimes"
+
+market_regime:
+  vix_enabled: true
+  vix_extreme_threshold: 35.0
+  vix_elevated_threshold: 25.0
+  vix_spike_threshold: 0.20
+
+scanner:
+  box_threshold: 0.06
+  ma_diff_threshold: 0.02
+  volatility_threshold: 0.035
+  volume_change_threshold: 0.9
+  volume_stability_threshold: 0.5
+  volume_increase_ratio: 1.25
+  min_box_quality: 0.6
+  min_atr_pct: 0.01
+  max_atr_pct: 0.05
+  min_dollar_volume: 1000000
+  # Trend pattern detector (disabled by default, enabled in bull_market)
+  use_trend_pattern_detector: false
+
+strategy:
+  min_score_threshold: 0.85
+  base_position_pct: 0.05
+  take_profit_pct: 0.20
+  stop_loss_pct: 0.06
+  tp_sl_ratio: 1.5
+  # Dynamic tp_sl_ratio based on volatility
+  dynamic_tp_sl_enabled: true
+  tp_sl_ratio_low_vol: 1.5
+  tp_sl_ratio_high_vol: 2.5
+  low_volatility_threshold: 0.02
+  high_volatility_threshold: 0.03
+
+# Breakthrough confirmation
+breakthrough:
+  require_confirmation_days: 1
+  confirmation_close_above_resistance: true
+
+risk_gate:
+  max_total_exposure: 0.85  # default

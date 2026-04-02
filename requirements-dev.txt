@@ -1,0 +1,38 @@
+# Development Dependencies
+# Install with: pip install -r requirements.txt -r requirements-dev.txt
+
+-r requirements.txt
+
+# ==============================================================================
+# Development & Testing Tools
+# ==============================================================================
+pytest-xdist>=3.5.0             # Parallel test execution
+pytest-timeout>=2.2.0           # Test timeout handling
+pytest-watch>=4.2.0             # Auto-run tests on file changes
+
+# ==============================================================================
+# Code Quality & Analysis
+# ==============================================================================
+pylint>=3.0.3                   # Code linting
+bandit>=1.7.6                   # Security vulnerability scanner
+radon>=6.0.1                    # Code complexity metrics
+vulture>=2.10                   # Dead code detection
+
+# ==============================================================================
+# Documentation
+# ==============================================================================
+sphinx>=7.2.6                   # Documentation generation
+sphinx-rtd-theme>=2.0.0         # Read the Docs theme
+
+# ==============================================================================
+# Profiling & Performance
+# ==============================================================================
+memory-profiler>=0.61.0         # Memory profiling
+py-spy>=0.3.14                  # Sampling profiler
+
+# ==============================================================================
+# Jupyter Notebooks (for analysis/debugging)
+# ==============================================================================
+jupyter>=1.0.0                  # Jupyter notebook
+notebook>=7.0.6                 # Classic notebook interface
+ipywidgets>=8.1.1               # Interactive widgets

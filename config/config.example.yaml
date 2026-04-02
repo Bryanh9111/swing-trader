@@ -1,0 +1,474 @@
+# =============================================================================
+# Automated Swing Trading System - Example Configuration
+# =============================================================================
+#
+# This is a ready-to-run example configuration for the open-source framework.
+# To use: copy this file to config.yaml and fill in your API keys in secrets.env.
+#
+# All strategy parameters use generic textbook defaults. Tune them to your own
+# edge before trading real capital.
+#
+# Environment-specific overrides: config.dev.yaml, config.paper.yaml, config.live.yaml
+# Local overrides: config.local.yaml (git ignored)
+# Secrets: secrets.env (git ignored) - see secrets.env.example for template
+# =============================================================================
+
+system:
+  version: "0.1.0"
+  log_level: "INFO"
+  log_output: "logs/system.log"
+
+# Operating mode (DRY_RUN, PAPER, LIVE)
+# IMPORTANT: Start with DRY_RUN. Switch to PAPER or LIVE only after thorough testing.
+mode: "DRY_RUN"
+
+# Run scheduling (UTC times)
+scheduling:
+  eod_scan:
+    enabled: true
+    time: "20:00"  # 8 PM UTC (after US market close)
+  intraday_check_1030:
+    enabled: false  # Disabled for initial development
+    time: "14:30"   # 10:30 AM ET
+  intraday_check_1430:
+    enabled: false  # Disabled for initial development
+    time: "18:30"   # 2:30 PM ET
+  pre_close_recon:
+    enabled: false  # Disabled for initial development
+    time: "19:30"   # 3:30 PM ET (before 4:00 PM market close)
+  pre_market_check:
+    enabled: false  # Disabled for initial development
+    time: "14:00"   # 9:00 AM ET (30 minutes before market open)
+
+# Data source configuration (see DesignOutline.md section 14)
+data_sources:
+  # Primary data sources
+  primary:
+    eod_historical: "s3"  # Use S3 historical data as primary source
+    intraday_delayed: "polygon"
+    fundamentals: "fmp"
+    news_sentiment: "finnhub"
+    polygon_api_key: null  # Resolved from POLYGON_API_KEY env var or secrets.env
+
+  # Failover configuration
+  failover:
+    enabled: true
+    max_retries: 3
+    retry_delay_seconds: 5
+
+  # Health check thresholds
+  health_check:
+    timeout_seconds: 10
+    max_error_rate: 0.1
+    max_staleness_hours: 24
+
+  # S3 Historical Data Source
+  s3:
+    enabled: true
+    priority: 5
+    endpoint_url: "https://your-s3-endpoint.example.com"  # Replace with your S3 endpoint
+    bucket_name: "your-bucket"                             # Replace with your bucket name
+    path_prefix: "us_stocks_sip/day_aggs_v1"
+    local_cache_dir: ".cache/historical"
+    max_workers: 15
+
+# Data Layer Plugin Configuration (DataPlugin -> data.orchestrator.DataOrchestrator)
+data:
+  enabled: true
+
+  # Hybrid source selection:
+  # - "s3": historical daily bars up to last year
+  # - "polygon": current-year daily bars for freshness
+  primary_source: "s3"
+  secondary_source: "polygon"
+
+  # Cache settings
+  cache_dir: ".cache/data"
+  cache_ttl_seconds: 86400
+  enable_incremental_cache: true
+
+  # Date range (auto-calculated if not specified)
+  lookback_days: 180
+
+  # API settings
+  requests_timeout_seconds: 15.0
+  polygon_api_key: null  # Leave null to resolve from POLYGON_API_KEY env var
+  polygon_unlimited: false
+  calls_per_minute: 5
+
+  # S3 settings (must match data_sources.s3 values)
+  s3_enabled: true
+  s3_endpoint_url: "https://your-s3-endpoint.example.com"  # Replace with your S3 endpoint
+  s3_bucket_name: "your-bucket"                             # Replace with your bucket name
+  s3_path_prefix: "us_stocks_sip/day_aggs_v1"
+
+# Universe Builder configuration
+universe_builder:
+  enabled: true
+  filters:
+    exchanges:
+      - "NYSE"
+      - "NASDAQ"
+    exclude_otc: true
+    exclude_halted: true
+    exclude_etfs: true
+    enable_details_enrich: true
+    details_enrich_top_k: 0
+    details_enrich_multiplier: 1.5
+    min_price: 1.00
+    max_price: 1000.0
+    min_avg_volume: 100000
+    min_market_cap: 50000000   # $50M minimum market cap
+  snapshot_cache_hours: 24
+
+# Scanner configuration (platform-phase detection)
+scanner:
+  enabled: true
+  lookback_days: 180
+
+  # Market Regime Detection Configuration
+  market_regime:
+    enabled: true
+    mode: auto
+    adx_period: 14
+    adx_trend_threshold: 25.0       # Textbook default
+    adx_choppy_threshold: 20.0      # Textbook default
+    ma_slope_days: 10
+    confirmation_days: 3
+    reset_on_opposite: true
+    ma_slope_bull_threshold: 0.01
+    ma_slope_bear_threshold: -0.01
+    stable_volatility_threshold: 0.02
+    # VIX integration
+    vix_enabled: false
+    vix_extreme_threshold: 35.0
+    vix_elevated_threshold: 25.0
+    vix_spike_threshold: 0.20
+    vix_spike_forces_choppy: true
+
+  # ADX Entry Filter
+  adx_entry_filter:
+    enabled: true
+    min_adx: 20.0
+    period: 14
+
+  # MA200 Trend Filter
+  ma200_trend_filter:
+    enabled: true
+    period: 200
+    require_above: true
+    tolerance_pct: 0.02
+
+  # Platform detection thresholds (generic defaults)
+  box_threshold: 0.08              # 8% platform range (generic)
+  volatility_threshold: 0.04      # 4% volatility threshold (generic)
+
+  # Liquidity monitor
+  liquidity_filter:
+    enabled: true
+    min_liquidity_score: 0.3
+    min_dollar_volume: 1000000
+    max_spread_proxy: 0.05
+
+  min_dollar_volume: 1000000
+
+  # Breakout confirmation
+  volume_increase_ratio: 1.5      # 1.5x volume surge (textbook)
+
+  # Breakthrough confirmation
+  require_breakout_confirmation: false
+  breakout_confirmation_days: 1
+
+  # Breakout volume spike
+  require_breakout_volume_spike: false
+  breakout_volume_ratio: 1.5
+
+  # Seasonal adaptation
+  enable_seasonal_adaptation: true
+  seasonal_low_volume_months: [8, 12]
+  seasonal_adjustments:
+    volume_increase_ratio: 1.2
+    min_dollar_volume: 500000
+
+  # Platform period filters
+  min_platform_days: 10
+  max_platform_days: 60
+
+  # Filters
+  use_low_position_filter: false
+  use_rapid_decline_filter: false
+  use_breakthrough_filter: true
+  use_pullback_confirmation_filter: false
+  pullback_confirmation:
+    enabled: false
+    lookback_days: 5
+    pullback_tolerance_pct: 0.02
+    require_volume_increase: false
+    volume_increase_ratio: 1.5
+
+  # Event Guard integration
+  use_event_guard_filter: true
+  earnings_window_days: 10
+
+  # Market cap filter (disabled due to look-ahead bias in backtest)
+  use_market_cap_filter: false
+
+  # Fundamental enrichment
+  enrich_with_fundamentals: false
+
+  # Indicator-based score adjustment (ranking only; never filters)
+  indicator_scoring:
+    enabled: true
+    combination_mode: "multiply"
+    base_weight: 0.7
+    rsi_enabled: true
+    rsi_weight: 0.25              # Equal weights across indicators
+    rsi_optimal_range: [30.0, 70.0]  # Textbook RSI range
+    macd_enabled: true
+    macd_weight: 0.25
+    macd_histogram_threshold: 0.0
+    atr_enabled: true
+    atr_weight: 0.25
+    atr_optimal_range: [0.01, 0.04]  # Generic ATR range
+    bbands_enabled: true
+    bbands_weight: 0.25
+    bbands_period: 20
+    bbands_std_dev: 2.0
+    obv_enabled: true
+    obv_weight: 0.25
+    divergence_lookback: 20
+    short_enabled: false
+    short_weight: 0.2
+    short_squeeze_threshold: 0.20
+    kdj_enabled: false
+    kdj_weight: 0.25
+    kdj_n_period: 9
+    kdj_k_period: 3
+    kdj_d_period: 3
+    kdj_oversold: 20.0
+    kdj_overbought: 80.0
+
+  # Oversold reversal detector
+  use_reversal_detector: false
+  reversal:
+    enabled: false
+    rsi_period: 14
+    rsi_oversold: 30.0
+    volume_lookback: 20
+    volume_ratio_threshold: 2.0
+    require_price_stabilization: true
+    stabilization_days: 2
+
+  # Legacy fields (ignored by new detector)
+  consolidation_threshold: 0.06
+  volume_spike_threshold: 1.5
+
+# Technical indicators configuration
+indicators:
+  rsi:
+    period: 14
+  macd:
+    fast: 12
+    slow: 26
+    signal: 9
+  ema:
+    periods: [12, 26]
+  sma:
+    periods: [20, 50, 200]
+
+# Event Guard configuration
+event_guard:
+  enabled: true
+  earnings_window_days: 2
+  offering_window_days: 7
+  lockup_window_days: 14
+  sources:
+    polygon_rest:
+      enabled: true
+      priority: 10
+      request_timeout_seconds: 30.0
+    yfinance:
+      enabled: true
+      priority: 30
+      max_workers: 10
+      request_delay_seconds: 0.05
+      cache_ttl_hours: 24
+
+# Market Calendar configuration
+market_calendar:
+  enabled: false
+  cache_ttl_hours: 24
+  requests_timeout_seconds: 30
+
+# Holiday behavior
+holiday_behavior:
+  universe: true
+  scanner: true
+  event_guard: true
+  strategy: false
+  risk_gate: false
+  execution: false
+
+# Signals configuration (optional modules)
+signals:
+  sentiment:
+    enabled: false
+  fear_greed:
+    enabled: false
+
+# Strategy Engine configuration
+# NOTE: This example uses simple fixed-percent sizing. The framework supports
+# more advanced sizers (fixed_risk, volatility_scaled, quality_scaled, adaptive).
+# See docs for details.
+strategy:
+  position_sizer: "fixed_percent"
+  base_position_pct: 0.05           # 5% of equity per position
+  min_position_pct: 0.025           # 2.5% minimum
+  min_score_threshold: 0.85         # Minimum score to trade
+
+  entry:
+    max_position_size: 0.02
+    ladder_tranches: 3
+    first_tranche_pct: 0.3
+  exit:
+    take_profit_pct: 0.10           # 10% profit target
+    stop_loss_pct: 0.05             # 5% stop loss
+    time_stop_days: 20              # Exit after 20 trading days
+
+  # Staged Take Profit (disabled in example)
+  staged_take_profit:
+    enabled: false
+
+  # Trailing Stop (disabled in example)
+  trailing_stop:
+    enabled: false
+    activate_at_R: 1.5
+    trail_pct: 0.05
+    min_trail_pct: 0.05
+    atr_multiplier: 0.8
+    atr_period: 14
+    force_after_partial_tp: false
+
+  indicators:
+    enabled: false
+    rsi_enabled: true
+    rsi_period: 14
+    rsi_overbought: 70.0
+    rsi_oversold: 30.0
+    macd_enabled: true
+    macd_fast: 12
+    macd_slow: 26
+    macd_signal: 9
+    macd_require_bullish: true
+
+  # Transaction cost parameters
+  transaction_costs:
+    spread_pct: 0.001              # 0.1% spread
+    slippage_pct: 0.0005           # 0.05% slippage
+    commission_per_trade: 1.0      # $1 flat commission
+
+  tp_sl_ratio: 1.5
+
+# Capital Allocation Configuration
+capital_allocation:
+  enabled: true
+  sizing_policy: pct
+  target_position_pct: 0.05        # 5% target per position
+  max_positions: 20
+  max_exposure_pct: 0.90           # 90% max exposure
+
+  min_position_pct: 0.03
+  max_position_pct: 0.07
+  base_position_pct: 0.05
+
+  cash_reserve_pct: 0.10
+  opportunity_reserve_pct: 0.05
+
+  min_position_value: 50.0
+  max_commission_ratio: 0.02
+  commission_per_trade: 1.0
+
+# Risk Gate configuration (portfolio-level caps)
+risk_gate:
+  enabled: true
+  checks:
+    - leverage
+    - concentration
+    - capital_usage
+    - reduce_only
+    - order_count
+    - rate_limit
+    - price_band
+  portfolio:
+    max_daily_exposure: 0.30
+    max_total_exposure: 1.00
+    max_concentration_per_symbol: 0.05
+    max_concentration_per_sector: 0.20
+    max_capital_usage: null
+    capital_usage_type: "absolute"
+  symbol:
+    min_spread_bps: 50
+    min_avg_volume: 100000
+    max_price_band_bps: 250.0
+    use_dynamic_price_band: true
+    atr_multiplier: 3.0
+    atr_period: 14
+    max_position_size: 10000.0
+    max_volatility_z_score: 3.0
+    event_window_hours: 24.0
+  operational:
+    max_orders_per_run: 20
+    max_new_positions_per_day: 5     # Reasonable default
+    safe_mode_loss_threshold: 0.05   # 5% daily loss triggers safe mode
+
+# Execution (IBKR adapter)
+execution:
+  enabled: false  # Enable when ready for paper/live trading
+  order_type: "LIMIT"
+  time_in_force: "DAY"
+  max_price_slippage_pct: 0.01
+
+  # IBKR broker connection configuration
+  broker_connection:
+    host: "127.0.0.1"
+    port: 7497  # Paper trading: 7497, Live trading: 7496
+    client_id: 1
+    enable_dynamic_client_id: true
+    client_id_range: [1, 32]
+    max_reconnect_attempts: 3
+    timeout: 10
+    readonly: false
+
+# Plugin Registry
+plugins:
+  data_sources: []
+  scanners: []
+  signals: []
+  strategies: []
+  risk_policies: []
+
+# Journal & Replay
+journal:
+  enabled: true
+  storage_path: "journal/"
+  retention_days: 365
+
+# Monitoring & Alerts
+monitoring:
+  enabled: true
+  alert_channels:
+    - "log"  # Email/Telegram/Slack configured via secrets
+  metrics:
+    - "candidate_count"
+    - "order_count"
+    - "risk_blocks"
+    - "execution_failures"
+
+# Position rotation
+position_rotation:
+  enabled: true
+  min_new_opportunity_score: 0.90
+  max_positions_to_rotate: 1
+  min_health_score_to_keep: 0.30
+  require_pnl_loss: true
+  min_loss_pct_to_replace: -0.03
