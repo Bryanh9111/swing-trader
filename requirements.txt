@@ -84,7 +84,7 @@ pre-commit>=3.6.0               # Git hooks for quality checks
 # Monitoring & Alerts
 # ==============================================================================
 # Email via SMTP (stdlib)
-python-telegram-bot>=20.7       # Telegram alerts
+python-telegram-bot>=22.7       # Telegram alerts
 slack-sdk>=3.26.1               # Slack alerts (optional)
 
 # ==============================================================================
