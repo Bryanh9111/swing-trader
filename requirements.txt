@@ -78,7 +78,7 @@ isort>=5.13.2                   # Import sorting
 # ==============================================================================
 ipython>=8.18.1                 # Enhanced Python shell
 ipdb>=0.13.13                   # Debugger
-pre-commit>=3.6.0               # Git hooks for quality checks
+pre-commit>=4.6.0               # Git hooks for quality checks
 
 # ==============================================================================
 # Monitoring & Alerts
