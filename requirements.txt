@@ -70,7 +70,7 @@ freezegun>=1.4.0                # Time mocking for deterministic tests
 # ==============================================================================
 mypy>=1.7.1                     # Static type checking
 ruff>=0.1.8                     # Fast linter and formatter
-black>=23.12.1                  # Code formatting
+black>=26.3.1                  # Code formatting
 isort>=5.13.2                   # Import sorting
 
 # ==============================================================================
