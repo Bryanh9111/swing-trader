@@ -7,7 +7,7 @@
 # Development & Testing Tools
 # ==============================================================================
 pytest-xdist>=3.5.0             # Parallel test execution
-pytest-timeout>=2.2.0           # Test timeout handling
+pytest-timeout>=2.4.0           # Test timeout handling
 pytest-watch>=4.2.0             # Auto-run tests on file changes
 
 # ==============================================================================
