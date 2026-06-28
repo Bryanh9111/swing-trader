@@ -23,7 +23,7 @@ polygon-api-client>=1.12.0      # Polygon.io official client
 
 # Secondary/Tertiary: Various providers
 yfinance>=0.2.40                # Yahoo Finance (free, tertiary fallback)
-lxml>=5.0.0                     # Required by yfinance for earnings_dates parsing
+lxml>=6.1.1                     # Required by yfinance for earnings_dates parsing
 alpha-vantage>=2.3.1            # Alpha Vantage API
 requests>=2.31.0                # HTTP requests for custom APIs
 httpx>=0.25.2                   # Modern async HTTP client
