@@ -29,7 +29,7 @@ requests>=2.31.0                # HTTP requests for custom APIs
 httpx>=0.25.2                   # Modern async HTTP client
 
 # S3 Historical Data (Polygon paid data via S3)
-boto3>=1.34.0                    # AWS SDK for S3 access
+boto3>=1.43.36                    # AWS SDK for S3 access
 
 # ==============================================================================
 # Data Processing & Analysis
