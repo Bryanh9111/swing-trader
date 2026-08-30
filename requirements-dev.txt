@@ -28,7 +28,7 @@ sphinx-rtd-theme>=2.0.0         # Read the Docs theme
 # Profiling & Performance
 # ==============================================================================
 memory-profiler>=0.61.0         # Memory profiling
-py-spy>=0.3.14                  # Sampling profiler
+py-spy>=0.4.2                  # Sampling profiler
 
 # ==============================================================================
 # Jupyter Notebooks (for analysis/debugging)
