@@ -14,7 +14,7 @@ pytest-watch>=4.2.0             # Auto-run tests on file changes
 # Code Quality & Analysis
 # ==============================================================================
 pylint>=3.0.3                   # Code linting
-bandit>=1.7.6                   # Security vulnerability scanner
+bandit>=1.9.4                   # Security vulnerability scanner
 radon>=6.0.1                    # Code complexity metrics
 vulture>=2.10                   # Dead code detection
 
