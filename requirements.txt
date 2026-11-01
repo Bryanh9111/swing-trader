@@ -12,7 +12,7 @@ pyyaml>=6.0.1                   # Configuration file parsing
 # ==============================================================================
 # Logging & Observability
 # ==============================================================================
-structlog>=23.2.0               # Structured logging with context
+structlog>=26.1.0               # Structured logging with context
 python-json-logger>=2.0.7       # JSON log formatting
 
 # ==============================================================================
